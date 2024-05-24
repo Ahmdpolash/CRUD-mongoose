@@ -1,0 +1,31 @@
+import { Schema, model } from "mongoose";
+import { TOrder } from "./order.interface.js";
+
+const OrderSchema = new Schema<TOrder>(
+  {
+    email: {
+      type: String,
+      required: [true, "email is must be provided"],
+      //   unique: true,
+    },
+    productId: {
+      type: String,
+      required: true,
+      //   unique: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  {
+    timestamps: true,
+  }
+);
+
+export const Orders = model<TOrder>("Order", OrderSchema);

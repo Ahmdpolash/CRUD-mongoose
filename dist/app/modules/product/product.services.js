@@ -45,10 +45,16 @@ const deleteProductFromDb = (id) => __awaiter(void 0, void 0, void 0, function* 
     // const result = await Product.deleteOne({ _id: id });
     return result;
 });
+//search by product name
+const searchByProductName = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield Product.find({ name: { $regex: name, $options: "i" } });
+    return result;
+});
 export const ProductService = {
     CreateProductIntoDb,
     getProductFromDb,
     getSingleProuductFromDb,
     updateProductIntoDb,
     deleteProductFromDb,
+    searchByProductName,
 };

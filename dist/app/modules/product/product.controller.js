@@ -30,17 +30,35 @@ const createPrduct = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 //get all products
 const getProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield ProductService.getProductFromDb();
-        res.status(200).json({
-            success: true,
-            message: "Products fetched successfully!",
-            data: result,
-        });
+        const { name } = req.query;
+        let result;
+        if (name) {
+            result = yield ProductService.searchByProductName(name);
+            if (!result.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: `No products found matching the search term '${name}'`,
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: `Products matching search term '${name}' fetched successfully`,
+                data: result,
+            });
+        }
+        else {
+            result = yield ProductService.getProductFromDb();
+            res.status(200).json({
+                success: true,
+                message: "Products retrived successfully!",
+                data: result,
+            });
+        }
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            message: "something went wrong",
+            message: "Something went wrong",
             error: error,
         });
     }
@@ -105,6 +123,36 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
+//search by product name
+// const searchProduct = async (req: Request, res: Response) => {
+//   try {
+//     const { name } = req.query as { name?: string };
+//     if (!name) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Search term is required",
+//       });
+//     }
+//     const result = await ProductService.searchByProductName(name);
+//     if (!result.length) {
+//       return res.status(404).json({
+//         success: false,
+//         message: `No products found matching the search term '${name}'`,
+//       });
+//     }
+//     res.status(200).json({
+//       success: true,
+//       message: `Products matching search term '${name}' fetched successfully`,
+//       data: result,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong",
+//       error: error,
+//     });
+//   }
+// };
 export const productController = {
     createPrduct,
     getProduct,
